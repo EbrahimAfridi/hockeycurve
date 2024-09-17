@@ -78,9 +78,26 @@ app.patch("/update/:id", async (c) => {
     } catch (error) {
         console.error(error);
         return c.text("Error while updating task.", 500);
-    } finally {
-        console.log("Updating task...");
     }
 });
 
+app.delete("/delete/:id", async (c) => {
+    const id = Number(c.req.param("id"));
+    console.log("id", id);
+
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+
+    try {
+        const task = await prisma.task.delete({
+            where: {id: id}
+        });
+        console.log(task);
+        return c.json({task: task}, 200);
+    } catch (error) {
+        console.error(error);
+        return c.text("Error while deleting task.", 500);
+    }
+})
 export default app
