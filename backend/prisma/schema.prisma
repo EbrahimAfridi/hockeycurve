@@ -12,3 +12,22 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Task {
+  id          Int      @id @default(autoincrement()) // Primary key, auto-incremented
+  title       String   @unique // Task title, unique for each task
+  description String // Task description
+  dueDate     DateTime // Due date, must be today or later
+  priority    Priority // Enum to represent task priority
+  completed   Boolean  @default(false) // Status of task (completed or not)
+  snoozed     Boolean  @default(false) // Snooze status, default is false
+  createdAt   DateTime @default(now()) // Auto-generated creation timestamp
+  updatedAt   DateTime @updatedAt // Auto-generated update timestamp
+}
+
+// Enum for task priority
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
