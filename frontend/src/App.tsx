@@ -19,9 +19,7 @@ function App() {
 
 
     return (
-        <div
-            className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 p-8 relative overflow-hidden"
-        >
+        <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 p-8 relative overflow-hidden">
             <div
                 className="absolute inset-0 bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-600 opacity-50"
                 style={{
