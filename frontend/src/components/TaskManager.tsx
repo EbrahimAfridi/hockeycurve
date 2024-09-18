@@ -19,6 +19,20 @@ function TaskManager() {
         console.log(tasks)
     }
 
+    const priorityColors = {
+        LOW: "bg-green-500",
+        MEDIUM: "bg-yellow-500",
+        HIGH: "bg-red-500"
+    }
+
+    const toggleTaskCompletion = (id: number) => {
+        setTasks(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task))
+    }
+
+    const toggleAccordion = (id: number) => {
+        setOpenAccordion(openAccordion === id ? null : id)
+    }
+
     return (
         <div
             className="relative z-10 max-w-4xl mx-auto bg-white bg-opacity-90 rounded-xl shadow-2xl overflow-hidden backdrop-blur-md">
@@ -35,15 +49,25 @@ function TaskManager() {
                 <div className="space-y-4">
                     {tasks.map((task) => (
                         <div key={task.id} className="border rounded-lg overflow-hidden bg-white bg-opacity-80">
-                            <div className="flex items-center justify-between w-full px-4 py-3 cursor-pointer">
+                            <div
+                                className="flex items-center justify-between w-full px-4 py-3 cursor-pointer"
+                                onClick={() => toggleAccordion(task.id)}
+                            >
                                 <div className="flex items-center space-x-4">
+                                    <div className={`w-3 h-3 rounded-full ${priorityColors[task.priority]}`}/>
                                     <span
                                         className={`text-xl font-semibold ${task.completed ? "line-through text-gray-400" : ""}`}>
                                         {task.title}
                                     </span>
                                 </div>
                                 <div className="flex items-center space-x-2">
-                                    <button className="text-gray-500 hover:text-gray-700 focus:outline-none">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            toggleTaskCompletion(task.id)
+                                        }}
+                                        className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                                    >
                                         {task.completed ? (
                                             <XCircle className="h-5 w-5"/>
                                         ) : (
@@ -56,7 +80,6 @@ function TaskManager() {
                                     <button className="text-red-500 hover:text-red-700 focus:outline-none">
                                         <Trash2 className="h-5 w-5"/>
                                     </button>
-                                    {/*TODO: ADD TOGGLE HANDLER LOGIC*/}
                                     {openAccordion === task.id ? (
                                         <ChevronUp className="h-5 w-5"/>
                                     ) : (
