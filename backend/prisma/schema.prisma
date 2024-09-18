@@ -10,7 +10,7 @@ datasource db {
 model Task {
   id          Int      @id @default(autoincrement()) // Primary key, auto-incremented
   title       String   @unique // Task title, unique for each task
-  description String // Task description
+  description String? // Task description
   dueDate     DateTime // Due date, must be today or later
   priority    Priority // Enum to represent task priority
   completed   Boolean  @default(false) // Status of task (completed or not)

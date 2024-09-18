@@ -1,7 +1,8 @@
-import {Hono} from 'hono'
-import {PrismaClient} from "@prisma/client/edge"
-import {withAccelerate} from "@prisma/extension-accelerate"
+import {Hono} from 'hono';
+import {PrismaClient} from "@prisma/client/edge";
+import {withAccelerate} from "@prisma/extension-accelerate";
 import {UpdateTaskPayload} from "../types";
+import {cors} from "hono/cors";
 
 const app = new Hono<{
     Bindings: {
@@ -9,7 +10,15 @@ const app = new Hono<{
     }
 }>();
 
-// Routes
+// CORS Middleware
+app.use("/*", cors());
+app.use('*', (c, next) => {
+    c.header('Access-Control-Allow-Origin', '*');
+    c.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+    c.header('Access-Control-Allow-Headers', 'Content-Type');
+    return next();
+});
+
 
 // 1. Get all tasks
 app.get('/api/tasks', async (c) => {
@@ -17,35 +26,46 @@ app.get('/api/tasks', async (c) => {
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate());
 
-    const tasks = await prisma.task.findMany();
-    console.log(tasks);
-
-    return c.json({tasks: tasks}, 200);
+    try {
+        const tasks = await prisma.task.findMany();
+        return c.json({tasks}, 200);
+    } catch (error) {
+        console.error(error);
+        return c.text("Error while fetching tasks.", 500);
+    }
 });
 
 // 2. Add a task
 app.post("/api/tasks/create", async (c) => {
     const body = await c.req.json();
-    console.log(body);
-
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate());
 
     try {
+        console.log(body);
         const task = await prisma.task.create({
+            // data: {
+            //     title: body.title,
+            //     // description: body.description,
+            //     dueDate: body.dueDate,
+            //     priority: body.priority,
+            //     createdAt: body.createdAt,
+            // }
             data: {
                 title: body.title,
-                description: body.description,
-                dueDate: body.dueDate,
+                description: body.description || null, // Default to null if not provided
+                dueDate: new Date(body.dueDate),        // Ensure valid Date object
                 priority: body.priority,
+                completed: body.completed || false,     // Boolean field
+                snoozed: body.snoozed || false,         // Boolean field
+                createdAt: body.createdAt ? new Date(body.createdAt) : undefined, // Optional field
             }
         });
-        console.log(task);
-        return c.json({task: task}, 200);
+        return c.json({task}, 200);
     } catch (error) {
         console.error(error);
-        return c.text("Error while creating a task.", 411);
+        return c.text("Error while creating task.", 500);
     }
 });
 
@@ -53,13 +73,11 @@ app.post("/api/tasks/create", async (c) => {
 app.patch("/api/tasks/update/:id", async (c) => {
     const {title, description, dueDate, priority, completed, snoozed} = await c.req.json();
     const id = Number(c.req.param("id"));
-    console.log("id", id);
 
-    // Create an updateData object based on the fields provided
     const updateData: UpdateTaskPayload = {};
     if (title) updateData.title = title;
     if (description) updateData.description = description;
-    if (dueDate) updateData.dueDate = new Date(dueDate).toISOString(); // Converting Date object into string
+    if (dueDate) updateData.dueDate = new Date(dueDate).toISOString();
     if (priority) updateData.priority = priority;
     if (typeof completed === 'boolean') updateData.completed = completed;
     if (typeof snoozed === 'boolean') updateData.snoozed = snoozed;
@@ -73,7 +91,6 @@ app.patch("/api/tasks/update/:id", async (c) => {
             where: {id: id},
             data: updateData,
         });
-        console.log(updatedTask);
         return c.json({task: updatedTask}, 200);
     } catch (error) {
         console.error(error);
@@ -84,7 +101,6 @@ app.patch("/api/tasks/update/:id", async (c) => {
 // 4. Delete a task
 app.delete("/api/tasks/delete/:id", async (c) => {
     const id = Number(c.req.param("id"));
-    console.log("id", id);
 
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
@@ -94,12 +110,11 @@ app.delete("/api/tasks/delete/:id", async (c) => {
         const task = await prisma.task.delete({
             where: {id: id}
         });
-        console.log(task);
-        return c.json({task: task}, 200);
+        return c.json({task}, 200);
     } catch (error) {
         console.error(error);
         return c.text("Error while deleting task.", 500);
     }
 });
 
-export default app
+export default app;

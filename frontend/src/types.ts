@@ -1,10 +1,10 @@
 export type Task = {
     id: number;
     title: string;
-    description: string;
+    description?: string;
+    dueDate?: any;
     priority: 'LOW' | 'MEDIUM' | 'HIGH';
-    dueDate: Date;
     completed: boolean;
-    createdAt: Date;
+    createdAt: string;
     snoozed: boolean;
 }
