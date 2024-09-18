@@ -6,3 +6,4 @@ export interface UpdateTaskPayload {
     completed?: boolean;
     snoozed?: boolean;
 }
+
