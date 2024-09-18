@@ -12,7 +12,7 @@ const app = new Hono<{
 // Routes
 
 // 1. Get all tasks
-app.get('/', async (c) => {
+app.get('/api/tasks', async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate());
@@ -24,7 +24,7 @@ app.get('/', async (c) => {
 });
 
 // 2. Add a task
-app.post("/create", async (c) => {
+app.post("/api/tasks/create", async (c) => {
     const body = await c.req.json();
     console.log(body);
 
@@ -50,7 +50,7 @@ app.post("/create", async (c) => {
 });
 
 // 3. Update a task
-app.patch("/update/:id", async (c) => {
+app.patch("/api/tasks/update/:id", async (c) => {
     const {title, description, dueDate, priority, completed, snoozed} = await c.req.json();
     const id = Number(c.req.param("id"));
     console.log("id", id);
@@ -82,7 +82,7 @@ app.patch("/update/:id", async (c) => {
 });
 
 // 4. Delete a task
-app.delete("/delete/:id", async (c) => {
+app.delete("/api/tasks/delete/:id", async (c) => {
     const id = Number(c.req.param("id"));
     console.log("id", id);
 
