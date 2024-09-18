@@ -1,9 +1,12 @@
 import './App.css'
+import TaskManager from "./components/TaskManager.tsx";
 
 function App() {
 
     return (
-        <>hi</>
+        <main>
+            <TaskManager />
+        </main>
     )
 }
 

@@ -3,7 +3,6 @@ import {PrismaClient} from "@prisma/client/edge"
 import {withAccelerate} from "@prisma/extension-accelerate"
 import {UpdateTaskPayload} from "../types";
 
-
 const app = new Hono<{
     Bindings: {
         DATABASE_URL: string,
@@ -11,7 +10,8 @@ const app = new Hono<{
 }>();
 
 // Routes
-// 1. Get All Tasks
+
+// 1. Get all tasks
 app.get('/', async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
@@ -23,7 +23,7 @@ app.get('/', async (c) => {
     return c.json({tasks: tasks}, 200);
 });
 
-// 2. Add a tasks
+// 2. Add a task
 app.post("/create", async (c) => {
     const body = await c.req.json();
     console.log(body);
@@ -81,6 +81,7 @@ app.patch("/update/:id", async (c) => {
     }
 });
 
+// 4. Delete a task
 app.delete("/delete/:id", async (c) => {
     const id = Number(c.req.param("id"));
     console.log("id", id);
@@ -99,5 +100,6 @@ app.delete("/delete/:id", async (c) => {
         console.error(error);
         return c.text("Error while deleting task.", 500);
     }
-})
+});
+
 export default app
