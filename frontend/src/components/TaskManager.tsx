@@ -19,9 +19,12 @@ function TaskManager() {
         console.log(tasks)
     }
 
-
     const updateTask = (id: number, updatedTask: Partial<Task>) => {
         setTasks(tasks.map(task => task.id === id ? {...task, ...updatedTask} : task))
+    }
+
+    const deleteTask = (id: number) => {
+        setTasks(tasks.filter(task => task.id !== id))
     }
 
     const priorityColors = {
@@ -44,8 +47,6 @@ function TaskManager() {
             <div className="p-8">
                 <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Task Manager</h1>
                 <div className="mb-8 flex h-12 space-x-4">
-                    {/*<Input newTask={newTask} setNewTask={setNewTask} placeholder={"Enter Task"}/>*/}
-                    {/*<Select/>*/}
                     <input
                         type="text"
                         placeholder="New task title"
@@ -108,7 +109,12 @@ function TaskManager() {
                                     >
                                         <Pencil className="h-5 w-5"/>
                                     </button>
-                                    <button className="text-red-500 hover:text-red-700 focus:outline-none">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            deleteTask(task.id)
+                                        }}
+                                        className="text-red-500 hover:text-red-700 focus:outline-none">
                                         <Trash2 className="h-5 w-5"/>
                                     </button>
                                     {openAccordion === task.id ? (
@@ -169,8 +175,8 @@ function TaskManager() {
                                                     <span className="capitalize">{task.priority} Priority</span>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
+                                                    <span>Due: {format(task.dueDate ?? new Date(), "PPP")}</span>
                                                     <Calendar className="h-5 w-5 text-gray-500"/>
-                                                    <span>Due: {format(task.dueDate, "PPP")}</span>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
                                                     <Clock className="h-5 w-5 text-gray-500"/>

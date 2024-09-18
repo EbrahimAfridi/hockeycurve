@@ -20,7 +20,9 @@ function CalendarComponent(
                 className="w-52 px-4 py-2.5 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2
                 focus:ring-blue-500 flex items-center justify-between"
             >
-                <span className={`${newTask.dueDate && `text-xs py-1`}`}>{newTask.dueDate ? format(newTask.dueDate, "PPP") : "Pick a date"}</span>
+                <span className={`${newTask.dueDate && `text-xs py-1`}`}>
+                    {newTask.dueDate ? format(newTask.dueDate, "PPP") : "Pick a date"}
+                </span>
                 <Calendar className="h-5 w-5" />
             </button>
             {showCalendar && (
