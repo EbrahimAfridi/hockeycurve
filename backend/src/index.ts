@@ -45,21 +45,13 @@ app.post("/api/tasks/create", async (c) => {
     try {
         console.log(body);
         const task = await prisma.task.create({
-            // data: {
-            //     title: body.title,
-            //     // description: body.description,
-            //     dueDate: body.dueDate,
-            //     priority: body.priority,
-            //     createdAt: body.createdAt,
-            // }
             data: {
                 title: body.title,
-                description: body.description || null, // Default to null if not provided
-                dueDate: new Date(body.dueDate),        // Ensure valid Date object
+                description: body.description || null,
+                dueDate: new Date(body.dueDate),
                 priority: body.priority,
-                completed: body.completed || false,     // Boolean field
-                snoozed: body.snoozed || false,         // Boolean field
-                createdAt: body.createdAt ? new Date(body.createdAt) : undefined, // Optional field
+                completed: body.completed || false,
+                snoozed: body.snoozed || false,
             }
         });
         return c.json({task}, 200);
