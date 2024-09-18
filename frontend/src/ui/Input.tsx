@@ -4,11 +4,11 @@ export default function Input({type = "text", placeholder, newTask, setNewTask}:
     type?: string,
     placeholder?: string,
     newTask?: Partial<Task>,
-    setNewTask?: (newTask: Partial<Task>) => void
+    setNewTask?: (newTask: Partial<Task>) => void,
 }) {
     return (
         <input
-            value={newTask?.title || ""}
+            value={newTask?.title ?? ""}
             onChange={(e) => {
                 if (setNewTask) {
                     setNewTask({...newTask, title: e.target.value});
