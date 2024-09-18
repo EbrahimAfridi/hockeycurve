@@ -19,10 +19,6 @@ function TaskManager() {
         console.log(tasks)
     }
 
-    const toggleAccordion = (id: number) => {
-        setOpenAccordion(openAccordion === id ? null : id)
-    }
-
     return (
         <div
             className="relative z-10 max-w-4xl mx-auto bg-white bg-opacity-90 rounded-xl shadow-2xl overflow-hidden backdrop-blur-md">
@@ -39,10 +35,7 @@ function TaskManager() {
                 <div className="space-y-4">
                     {tasks.map((task) => (
                         <div key={task.id} className="border rounded-lg overflow-hidden bg-white bg-opacity-80">
-                            <div
-                                className="flex items-center justify-between w-full px-4 py-3 cursor-pointer"
-                                onClick={() => toggleAccordion(task.id)}
-                            >
+                            <div className="flex items-center justify-between w-full px-4 py-3 cursor-pointer">
                                 <div className="flex items-center space-x-4">
                                     <span
                                         className={`text-xl font-semibold ${task.completed ? "line-through text-gray-400" : ""}`}>
