@@ -1,34 +1,26 @@
 import AddButton from "../ui/AddButton.tsx";
-import {useEffect, useState} from "react";
+import Input from "../ui/Input.tsx";
+import Select from "../ui/Select.tsx";
+import {Calendar} from "lucide-react";
 
 function TaskManager() {
-    const [mousePosition, setMousePosition] = useState({x: 0, y: 0})
-
-    useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            setMousePosition({x: e.clientX, y: e.clientY})
-        }
-
-        window.addEventListener('mousemove', handleMouseMove)
-
-        return () => {
-            window.removeEventListener('mousemove', handleMouseMove)
-        }
-    }, [])
 
     return (
         <div
-            className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 p-8 relative overflow-hidden"
-        >
-            <div
-                className="absolute inset-0 bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-600 opacity-50"
-                style={{
-                    transform: `translate(${mousePosition.x / 50}px, ${mousePosition.y / 50}px)`,
-                    transition: 'transform 0.2s ease-out',
-                }}
-            />
-            <div className="absolute inset-0 backdrop-blur-3xl"/>
-            <AddButton text={"Add Task"}/>
+            className="relative z-10 max-w-4xl mx-auto bg-white bg-opacity-90 rounded-xl shadow-2xl overflow-hidden backdrop-blur-md">
+            <div className="p-8">
+                <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Task Manager</h1>
+                <div className="mb-8 flex space-x-4">
+                    <Input type={"text"} placeholder={"Enter Task"}/>
+                    <Select/>
+                </div>
+                <div className="relative">
+                    <button>
+                        <Calendar className="h-5 w-5"/>
+                    </button>
+                    <AddButton text={"Add Task"}/>
+                </div>
+            </div>
         </div>
     );
 }
