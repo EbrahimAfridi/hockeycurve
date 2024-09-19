@@ -184,7 +184,7 @@ function TaskManager() {
                                         }}
                                         className="text-blue-500 hover:text-blue-700 focus:outline-none"
                                     >
-                                        <Pencil className="h-5 w-5"/>
+                                        <Pencil className="size-5"/>
                                     </button>
                                     <button
                                         onClick={(e) => {

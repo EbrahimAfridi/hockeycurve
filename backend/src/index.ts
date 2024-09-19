@@ -42,6 +42,16 @@ app.post("/api/tasks/create", async (c) => {
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate());
 
+    // Basic validation
+    if (!body.title) {
+        return c.text("Title is required.", 400);
+    }
+
+    // Ensure dueDate is a valid date if provided
+    if (body.dueDate && isNaN(new Date(body.dueDate).getTime())) {
+        return c.text("Invalid due date.", 400);
+    }
+
     try {
         console.log(body);
         const task = await prisma.task.create({

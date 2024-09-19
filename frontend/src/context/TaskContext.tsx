@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { fetchTasks, createTask, updateTask, deleteTask } from '../api/taskAPI';
-import { Task } from '../types';
+import React, {createContext, useContext, useEffect, useState} from 'react';
+import {createTask, deleteTask, fetchTasks, updateTask} from '../api/taskAPI';
+import {Task} from '../types';
 
 interface TaskContextType {
     tasks: Task[];
@@ -11,7 +11,7 @@ interface TaskContextType {
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
-export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [tasks, setTasks] = useState<Task[]>([]);
 
     useEffect(() => {
@@ -23,9 +23,18 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
 
     const addTask = async (newTask: Partial<Task>) => {
-        const response = await createTask(newTask as Task);
-        setTasks((prev) => [...prev, response.task]);
+        try {
+            const response = await createTask(newTask as Task);
+            if (response && response.task) {
+                setTasks((prev) => [...prev, response.task]);
+            } else {
+                console.error("No task returned from createTask");
+            }
+        } catch (error) {
+            console.error("Failed to add task:", error);
+        }
     };
+
 
     const updateTaskHandler = async (id: number, updatedTask: Partial<Task>) => {
         const response = await updateTask(id, updatedTask as Task);
@@ -40,7 +49,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <TaskContext.Provider value={{ tasks, addTask, updateTask: updateTaskHandler, removeTask }}>
+        <TaskContext.Provider value={{tasks, addTask, updateTask: updateTaskHandler, removeTask}}>
             {children}
         </TaskContext.Provider>
     );

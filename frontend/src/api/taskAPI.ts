@@ -23,14 +23,15 @@ export async function createTask(task: Task) {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to create task');
+            const errorText = await response.text();
+            throw new Error(`Failed to create task: ${errorText}`);
         }
 
-        return response.json();
+        return await response.json(); // Ensure this returns the full response
     } catch (error) {
-        console.error(error);
+        console.error("Error creating task:", error);
+        throw error; // Rethrow the error for upstream handling
     }
-
 }
 
 export async function updateTask(id: number, updatedTask: Partial<Task>) {
