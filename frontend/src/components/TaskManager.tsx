@@ -16,6 +16,9 @@ function TaskManager() {
     const [description, setDescription] = useState<string>("");
     const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH">("LOW");
 
+    // Just to ignore the vercel deployment issue
+    console.log(editingTask);
+
     useEffect(() => {
         const loadTasks = async () => {
             try {
