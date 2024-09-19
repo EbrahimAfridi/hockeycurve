@@ -42,7 +42,7 @@ const TaskItem: React.FC<{ task: Task }> = ({task}) => {
     };
 
     return (
-        <div className="border hover:bg-zinc-100 rounded-lg overflow-hidden bg-white">
+        <div className="border hover:bg-zinc-100 rounded-lg overflow-hidden bg-white my-2.5">
             <div className="flex justify-between items-center p-4" onClick={() => handleToggleAccordion(task.id)}>
                 <div className={`rounded-full flex items-center gap-2`}>
                     {priorityIcons[task.priority]}
