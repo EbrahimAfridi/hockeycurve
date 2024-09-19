@@ -1,16 +1,18 @@
 import React from 'react';
-import { Task } from '../types';
-import { CheckCircle, Trash2, Pencil } from 'lucide-react';
-import {deleteTask, updateTask} from "../api/taskAPI.ts";
+import {Task} from '../types';
+import {CheckCircle, Pencil, Trash2} from 'lucide-react';
+import {deleteTask} from "../api/taskAPI.ts";
+import {useTaskContext} from "../context/TaskContext.tsx";
 
-const TaskItem: React.FC<{ task: Task }> = ({ task }) => {
+const TaskItem: React.FC<{ task: Task }> = ({task}) => {
+    const {updateTask} = useTaskContext();
 
     const handleDelete = async () => {
         await deleteTask(task.id);
     };
 
     const handleToggleComplete = async () => {
-        await updateTask(task.id, { completed: !task.completed });
+        await updateTask(task.id, {completed: !task.completed});
     };
 
     return (
@@ -19,13 +21,14 @@ const TaskItem: React.FC<{ task: Task }> = ({ task }) => {
                 <span className={task.completed ? 'line-through' : ''}>{task.title}</span>
                 <div className="flex space-x-2">
                     <button onClick={handleToggleComplete}>
-                        {task.completed ? <CheckCircle className="text-green-500" /> : <CheckCircle className="text-gray-500" />}
+                        {task.completed ? <CheckCircle className="text-green-500"/> :
+                            <CheckCircle className="text-gray-500"/>}
                     </button>
                     <button>
-                        <Pencil className="text-blue-500" />
+                        <Pencil className="text-blue-500"/>
                     </button>
                     <button onClick={handleDelete}>
-                        <Trash2 className="text-red-500" />
+                        <Trash2 className="text-red-500"/>
                     </button>
                 </div>
             </div>

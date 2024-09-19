@@ -1,13 +1,13 @@
-import { useTaskContext } from '../context/TaskContext';
+import {useTaskContext} from '../context/TaskContext';
 import TaskItem from './TaskItem';
 
 const TaskList = () => {
-    const { tasks } = useTaskContext();
+    const {tasks} = useTaskContext();
 
     return (
         <div className="space-y-4">
             {tasks.map((task) => (
-                <TaskItem key={task.id} task={task} />
+                <TaskItem key={task.id} task={task}/>
             ))}
         </div>
     );

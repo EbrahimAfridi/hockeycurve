@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import AddButton from '../ui/AddButton';
+import {useTaskContext} from "../context/TaskContext.tsx";
 
 const TaskForm = () => {
+    const {addTask} = useTaskContext();
+
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [priority, setPriority] = useState<'LOW' | 'MEDIUM' | 'HIGH'>('LOW');
 
-    // TODO: MAKE A addTask METHOD IN CONTEXT
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (title) {
-            await addTask({ title, description, priority });
+            await addTask({title, description, priority});
             setTitle('');
             setDescription('');
             setPriority('LOW');
@@ -43,7 +45,7 @@ const TaskForm = () => {
                 <option value="MEDIUM">Medium</option>
                 <option value="HIGH">High</option>
             </select>
-            <AddButton text="Add Task" />
+            <AddButton text="Add Task"/>
         </form>
     );
 };
