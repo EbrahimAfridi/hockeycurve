@@ -1,16 +1,17 @@
-import React, {createContext, useContext, useEffect, useState} from 'react';
-import {createTask, fetchTasks, updateTask} from '../api/taskAPI';
-import {Task} from '../types';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { fetchTasks, createTask, updateTask, deleteTask } from '../api/taskAPI';
+import { Task } from '../types';
 
 interface TaskContextType {
     tasks: Task[];
     addTask: (task: Partial<Task>) => Promise<void>;
     updateTask: (id: number, task: Partial<Task>) => Promise<void>;
+    removeTask: (id: number) => Promise<void>;
 }
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
-export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
+export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [tasks, setTasks] = useState<Task[]>([]);
 
     useEffect(() => {
@@ -33,8 +34,13 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({children}
         );
     };
 
+    const removeTask = async (id: number) => {
+        await deleteTask(id);
+        setTasks((prev) => prev.filter((task) => task.id !== id));
+    };
+
     return (
-        <TaskContext.Provider value={{tasks, addTask, updateTask: updateTaskHandler}}>
+        <TaskContext.Provider value={{ tasks, addTask, updateTask: updateTaskHandler, removeTask }}>
             {children}
         </TaskContext.Provider>
     );

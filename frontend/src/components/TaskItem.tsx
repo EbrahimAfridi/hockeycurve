@@ -1,14 +1,13 @@
 import React from 'react';
+import {useTaskContext} from '../context/TaskContext';
 import {Task} from '../types';
 import {CheckCircle, Pencil, Trash2} from 'lucide-react';
-import {deleteTask} from "../api/taskAPI.ts";
-import {useTaskContext} from "../context/TaskContext.tsx";
 
 const TaskItem: React.FC<{ task: Task }> = ({task}) => {
-    const {updateTask} = useTaskContext();
+    const {updateTask, removeTask} = useTaskContext();
 
     const handleDelete = async () => {
-        await deleteTask(task.id);
+        await removeTask(task.id);
     };
 
     const handleToggleComplete = async () => {
