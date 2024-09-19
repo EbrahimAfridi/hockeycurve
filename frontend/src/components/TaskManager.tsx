@@ -14,6 +14,7 @@ function TaskManager() {
     const [currentTaskId, setCurrentTaskId] = useState<number | null>(null);
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
+    const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH">("LOW");
 
     useEffect(() => {
         const loadTasks = async () => {
@@ -36,9 +37,12 @@ function TaskManager() {
         setDescription(e.target.value);
     };
 
+    const handlePriorityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setPriority(e.target.value as "LOW" | "MEDIUM" | "HIGH");
+    };
+
     const handleAddTask = async () => {
         if (newTask.title) {
-            console.log(newTask);
             try {
                 const response = await createTask({
                     ...newTask,
@@ -66,7 +70,8 @@ function TaskManager() {
             try {
                 await handleUpdateTask(currentTaskId, {
                     title,
-                    description
+                    description,
+                    priority
                 });
                 setEditingTask(null); // Exit editing mode
                 setCurrentTaskId(null); // Clear the current task ID
@@ -86,10 +91,16 @@ function TaskManager() {
         }
     };
 
+    // const priorityColors = {
+    //     LOW: "bg-green-500",
+    //     MEDIUM: "bg-yellow-500",
+    //     HIGH: "bg-red-500",
+    // };
+
     const priorityColors = {
-        LOW: "bg-green-500",
-        MEDIUM: "bg-yellow-500",
-        HIGH: "bg-red-500",
+        LOW: "🪫",
+        MEDIUM: "🙆🏻‍♂️️",
+        HIGH: "🚨",
     };
 
     const toggleTaskCompletion = (id: number) => {
@@ -141,8 +152,9 @@ function TaskManager() {
                                 className="flex items-center justify-between w-full px-4 py-3 cursor-pointer"
                                 onClick={() => toggleAccordion(task.id)}
                             >
-                                <div className="flex items-center space-x-4">
-                                    <div className={`w-3 h-3 rounded-full ${priorityColors[task.priority]}`}/>
+                                <div className="flex items-baseline space-x-4">
+                                    {/*<div className={`w-3 h-3 rounded-full ${priorityColors[task.priority]}`}/>*/}
+                                    <div className={`w-3 h-3 rounded-full`}>{priorityColors[task.priority]}</div>
                                     <span
                                         className={`text-xl font-semibold ${task.completed ? "line-through text-gray-400" : ""}`}>
                                         {task.title}
@@ -202,9 +214,19 @@ function TaskManager() {
                                                 onChange={handleDescriptionChange}
                                                 className="w-full px-4 py-2 border border-gray-300 rounded-md mb-2"
                                             />
+                                            <select
+                                                value={priority}
+                                                onChange={handlePriorityChange}
+                                                className="w-32 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            >
+                                                <option value="">Priority</option>
+                                                <option value="LOW">Low</option>
+                                                <option value="MEDIUM">Medium</option>
+                                                <option value="HIGH">High</option>
+                                            </select>
                                             <button
                                                 onClick={handleSave}
-                                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 w-24 font-medium mt-2 py-2 rounded-md focus:outline-none"
+                                                className="ml-4 bg-blue-600 hover:bg-blue-700 text-white px-4 w-24 font-medium mt-2 py-2 rounded-md focus:outline-none"
                                             >
                                                 Save
                                             </button>
